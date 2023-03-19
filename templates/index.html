@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>prediction sentiment and rate of the review</title>
+  </head>
+  <body>
+    <h1>Enter review</h1>
+    <form method="POST" action="/">
+      <label for="input_field">Input Field:</label><br>
+      <textarea id="review" name="review" rows="10" cols="50"></textarea><br>
+      <button type="submit">Submit</button>
+    </form>
+    {% if message %}
+      <p>this review gets: {{ message }}</p>
+    {% endif %}
+  </body>
+</html>
