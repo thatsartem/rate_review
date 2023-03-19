@@ -1,12 +1,14 @@
 import torch
 import torch.nn as nn
 
-class CNNModel_sen(nn.Module):
-    def __init__(self,embedding_matrix, hidden_size):
+pretrained_embeddings = torch.load('embeddings.pth')
+
+class CNNModel1(nn.Module):
+    def __init__(self, hidden_size):
         super().__init__()
-        self.embeddings = nn.Embedding.from_pretrained(embedding_matrix, freeze=True)
+        self.embeddings = nn.Embedding.from_pretrained(pretrained_embeddings, freeze=True)
         self.cnn = nn.Sequential(
-            nn.Conv1d(embedding_matrix.shape[1], hidden_size, kernel_size=3, padding=1, stride=2),
+            nn.Conv1d(pretrained_embeddings.shape[1], hidden_size, kernel_size=3, padding=1, stride=2),
             nn.ReLU(),
             nn.Conv1d(hidden_size,hidden_size,kernel_size=3,padding=1, stride=2),
             nn.ReLU(),
@@ -26,13 +28,20 @@ class CNNModel_sen(nn.Module):
         x = self.cnn(x)
         predictions = self.clf(x)
         return predictions
+
+    def forward(self, x):
+        x = self.embeddings(x)
+        x = x.permute(0,2,1)
+        x = self.cnn(x)
+        predictions = self.clf(x)
+        return predictions
     
-class CNNModel_rate(nn.Module):
-    def __init__(self,embedding_matrix, hidden_size):
+class CNNModel2(nn.Module):
+    def __init__(self, hidden_size):
         super().__init__()
-        self.embeddings = nn.Embedding.from_pretrained(embedding_matrix, freeze=True)
+        self.embeddings = nn.Embedding.from_pretrained(pretrained_embeddings, freeze=True)
         self.cnn = nn.Sequential(
-            nn.Conv1d(embedding_matrix.shape[1], hidden_size, kernel_size=3, padding=1, stride=2),
+            nn.Conv1d(pretrained_embeddings.shape[1], hidden_size, kernel_size=3, padding=1, stride=2),
             nn.ReLU(),
             nn.Conv1d(hidden_size,hidden_size,kernel_size=3,padding=1, stride=2),
             nn.ReLU(),
